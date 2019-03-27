@@ -1,0 +1,14 @@
+prefix=/home/fffmpeg/FFmpeg-Android/android/armv7-a
+exec_prefix=${prefix}
+libdir=/home/fffmpeg/FFmpeg-Android/android/armv7-a/lib
+includedir=/home/fffmpeg/FFmpeg-Android/android/armv7-a/include
+
+Name: libavfilter
+Description: FFmpeg audio/video filtering library
+Version: 6.107.100
+Requires: 
+Requires.private: libswscale >= 4.8.100, libpostproc >= 54.7.100, libswresample >= 2.9.100, libavformat >= 57.83.100, libavcodec >= 57.107.100, libavutil >= 55.78.100
+Conflicts:
+Libs: -L${libdir}  -lavfilter 
+Libs.private: -lx264 -lm -lz -pthread -pthread
+Cflags: -I${includedir}
