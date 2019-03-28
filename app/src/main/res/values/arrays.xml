@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="presets">
+        <item>ultrafast</item>
+        <item>superfast</item>
+        <item>veryfast</item>
+        <item>faster</item>
+        <item>fast</item>
+        <item>medium</item>
+        <item>slow</item>
+        <item>slower</item>
+        <item>veryslow</item>
+    </string-array>
+    <string-array name="tune">
+        <item>film</item>
+        <item>animation</item>
+        <item>grain</item>
+        <item>stillimage</item>
+        <item>fastdecode</item>
+        <item>zerolatency</item>
+    </string-array>
+</resources>

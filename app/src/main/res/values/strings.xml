@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Transcoder</string>
+    <string name="video_transcode">视频转码</string>
+    <string name="video_edit">视频编辑</string>
+    <string name="click_choose_video">点击选择视频</string>
+    <string name="target_resolution">目标分辨率:</string>
 </resources>

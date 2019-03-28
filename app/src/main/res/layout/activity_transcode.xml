@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TranscodeActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="90dp"
+                    android:text="@string/click_choose_video"
+                    android:textColor="@color/colorTextGray"/>
+
+                <ImageView
+                    android:id="@+id/iv_cover"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/border_primary"
+                    android:scaleType="centerCrop"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/iv_cover"
+                    android:orientation="vertical"
+                    android:paddingEnd="16dp"
+                    android:paddingStart="16dp">
+
+                    <TextView
+                        android:id="@+id/tv_resolution"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorTextGray"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/tv_fps"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorTextGray"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/tv_bitrate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorTextGray"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/tv_duration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorTextGray"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/tv_vcodec"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorTextGray"
+                        android:textSize="12sp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/target_resolution"
+                            android:textColor="@color/colorTextGray"/>
+
+                        <EditText
+                            android:id="@+id/edit_width"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/border_primary"
+                            android:text="1920"
+                            android:textColor="@color/colorTextGray"
+                            android:textSize="14sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="2dp"
+                            android:layout_marginStart="2dp"
+                            android:text="x"
+                            android:textColor="@color/colorTextGray"/>
+
+                        <EditText
+                            android:id="@+id/edit_height"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/border_primary"
+                            android:text="1080"
+                            android:textColor="@color/colorTextGray"
+                            android:textSize="14sp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="目标帧率(FPS):"
+                            android:textColor="@color/colorTextGray"/>
+
+                        <EditText
+                            android:id="@+id/edit_fps"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:background="@drawable/border_primary"
+                            android:textColor="@color/colorTextGray"
+                            android:textSize="14sp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="目标码率(Kbps):"
+                            android:textColor="@color/colorTextGray"/>
+
+                        <EditText
+                            android:id="@+id/edit_bitrate"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:background="@drawable/border_primary"
+                            android:textColor="@color/colorTextGray"
+                            android:textSize="14sp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="转码速率:"
+                            android:textColor="@color/colorTextGray"/>
+
+                        <Spinner
+                            android:id="@+id/spinner_preset"
+                            android:layout_width="150dp"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="5dp"
+                            android:entries="@array/presets"
+                            android:outlineAmbientShadowColor="@color/colorTextGray"
+                            android:outlineSpotShadowColor="@color/colorTextGray"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="存储路径:"
+                            android:textColor="@color/colorTextGray"/>
+
+                        <EditText
+                            android:id="@+id/edit_save_path"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:textColor="@color/colorTextGray"
+                            android:textSize="14sp"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="转码进度："
+                        android:textColor="@color/colorTextGray"/>
+
+                    <ProgressBar
+                        android:id="@+id/pb_transcode"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:max="100"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tv_time_spent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="耗时：00:00"
+                            android:textColor="@color/colorTextGray"/>
+
+                        <TextView
+                            android:id="@+id/tv_trascode_progress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="0%"
+                            android:textColor="@color/colorTextGray"/>
+                    </RelativeLayout>
+
+                    <Button
+                        android:id="@+id/btn_start_transcode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="开始转码"/>
+                </LinearLayout>
+
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>
