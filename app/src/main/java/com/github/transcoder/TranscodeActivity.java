@@ -34,8 +34,8 @@ import java.util.Locale;
 
 public class TranscodeActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private final static int CODE_REQUEST_READ_EXTERNAL = 0x100;
-    private int PICK_VIDEO_REQUEST = 0x101;
+    private final static int CODE_REQUEST_WRITE_EXTERNAL = 0x100;
+    private int PICK_VIDEO_REQUEST = 0x2;
     private String mVideoPath;
     private ImageView mIvCover;
     private TextView mTvResolution;
@@ -126,12 +126,12 @@ public class TranscodeActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void checkPermission() {
-        int permissions = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        int permissions = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (permissions != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                     this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    CODE_REQUEST_READ_EXTERNAL
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    CODE_REQUEST_WRITE_EXTERNAL
             );
         }
 
