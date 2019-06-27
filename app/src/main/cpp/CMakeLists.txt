@@ -94,6 +94,12 @@ add_library(
         SHARED
         ffmpeg/ffmpeg-cmd.cpp ffmpeg/ffmpeg.c ffmpeg/cmdutils.c ffmpeg/ffmpeg_filter.c ffmpeg/ffmpeg_hw.c ffmpeg/ffmpeg_opt.c
 )
+
+find_library( # Sets the name of the path variable.
+        log-lib
+
+        log)
+
 target_link_libraries( # Specifies the target library.
         ffmpeg-cmd
 
@@ -105,8 +111,3 @@ target_link_libraries( # Specifies the target library.
         libavformat
         libavfilter
         ${log-lib})
-
-find_library( # Sets the name of the path variable.
-        log-lib
-
-        log)

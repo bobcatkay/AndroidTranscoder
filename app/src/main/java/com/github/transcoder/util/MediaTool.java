@@ -47,7 +47,6 @@ public class MediaTool {
     }
 
     public static void fillInfo(String path, VideoInfo info) {
-        int fps = 0;
         MediaExtractor extractor = new MediaExtractor();
         try {
             extractor.setDataSource(path);
@@ -57,7 +56,6 @@ public class MediaTool {
                 String mime = format.getString(MediaFormat.KEY_MIME);
                 if (mime.startsWith("video/")) {
                     info.fps = format.getInteger(MediaFormat.KEY_FRAME_RATE);
-                    //format.getString(MediaFormat.KEY_PROFILE);
                     info.videoCodec = mime;
                 }
             }
@@ -111,7 +109,5 @@ public class MediaTool {
         public int bitrate;
         public int fps;
         public String videoCodec;
-        //public String profile;
-
     }
 }

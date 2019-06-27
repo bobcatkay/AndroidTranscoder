@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/AndroidTranscoder.iml" filepath="$PROJECT_DIR$/AndroidTranscoder.iml" />
       <module fileurl="file://$PROJECT_DIR$/Transcoder.iml" filepath="$PROJECT_DIR$/Transcoder.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
