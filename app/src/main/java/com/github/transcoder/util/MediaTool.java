@@ -24,10 +24,12 @@ public class MediaTool {
         String width = retr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH); // 视频宽度 ]
         String duration = retr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         String bitrate = retr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE);
+        String rotation = retr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
         VideoInfo videoInfo = new VideoInfo();
         videoInfo.width = Integer.valueOf(width);
         videoInfo.height = Integer.valueOf(height);
         videoInfo.bitrate = Integer.valueOf(bitrate);
+        videoInfo.rotation = Integer.valueOf(rotation);
 
         videoInfo.duration = Long.valueOf(duration);
         retr.release();
@@ -103,6 +105,7 @@ public class MediaTool {
     }
 
     public static class VideoInfo {
+        public int rotation;
         public int width;
         public int height;
         public long duration;

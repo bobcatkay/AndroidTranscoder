@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('D:\\Android\\MyProject\\AndroidTranscoder\\test123.jks')
+            storePassword 'test123'
+            keyAlias = 'test123'
+            keyPassword 'test123'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.github.transcoder"
@@ -17,6 +25,7 @@ android {
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a'
         }
+        signingConfig signingConfigs.debug
     }
     sourceSets {
         main {
@@ -27,6 +36,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+        debug {
+            signingConfig signingConfigs.debug
         }
     }
     externalNativeBuild {
