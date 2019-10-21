@@ -4790,15 +4790,26 @@ static void log_callback_null(void *ptr, int level, const char *fmt, va_list vl)
     strcpy(prev, line);
 
     //updata progress
-    char *regex = "size=[0-9]*[ ]*ts=([0-9]+[ ]*flags=)";
+//    char *regex = "size=[0-9]*[ ]*ts=([0-9]+[ ]*flags=)";;
+    char *regex = "[ ]*frame=[ ]*([0-9]+)[ ]*QP=";
 
     regex_t comment;
-    regmatch_t regmatch[1];
+    regmatch_t regmatch[2];
     regcomp(&comment, regex, REG_EXTENDED | REG_NEWLINE);
-    int status = regexec(&comment, line, sizeof(regmatch) / sizeof(regmatch_t), regmatch, 0);
+    int status = regexec(&comment, line, 2, regmatch, 0);
     if(status==0){
-        update_progress(line);
+        int cnt;
+        char str[256];
+        memset(str, sizeof(str), 0);
+        int start = regmatch[1].rm_so;
+        int end = regmatch[1].rm_eo;
+        cnt = end-start;
+        memcpy(str, &line[start], cnt);
+        str[cnt] = '\0';
+        LOGD("start=%d, end=%d, str=%s", start, end, str);
+        update_progress(str);
     }
+    regfree(&comment);
 
     if (level <= AV_LOG_WARNING) {
         LOGE("%s", line);
@@ -4894,29 +4905,10 @@ int ffmpeg_exec(int argc, char **argv)
     return main_return_code;
 }
 
-int update_progress(char* srcStr) {
+int update_progress(char* p) {
     //char *srcStr = "Got output buffer 6 offset=0 size=3133440 ts=29267344 flags=0 ts=29267344";
-    char *regex = "ts=([0-9]+)";
-
-    regex_t comment;
-    int cnt;
-    char str[256];
-    regmatch_t regmatch[1];
-    regcomp(&comment, regex, REG_EXTENDED | REG_NEWLINE);
-    int status = regexec(&comment, srcStr, sizeof(regmatch) / sizeof(regmatch_t), regmatch, 0);
-    LOGD("status=%d",status);
-    if (status==0){
-        memset(str, sizeof(str), 0);
-        int start = regmatch[0].rm_so+3;
-        int end = regmatch[0].rm_eo;
-        cnt = end-start;
-        LOGD("start=%d, end=%d", end, start);
-        memcpy(str, &srcStr[start], cnt);
-        str[cnt] = '\0';
-        LOGD("result=%s\n", str);
-    }
-    int result = atoi(str);
-    regfree(&comment);
+    //char *regex = "ts=([0-9]+)";
+    int result = atoi(p);
     progress = result;
     return result;
 }

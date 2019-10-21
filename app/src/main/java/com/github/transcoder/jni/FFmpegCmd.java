@@ -48,17 +48,17 @@ public class FFmpegCmd {
      */
     public static void transcode(String srcPath, String outPath, int targetFPS, int bitrate, int targetWidth, int targetHeight, long duration, String presets, ProgressListener listener) {
         new Thread(() -> {
-            int ts = -1;
+            int frame = -1;
             boolean started = false;
-            while (ts != 0) {
-                int tsTemp = getProgress();
+            while (frame != 0) {
+                int frameTemp = getProgress();
                 int progress;
-                if (tsTemp > 0) {
+                if (frameTemp > 0) {
                     started = true;
                 }
                 if (started) {
-                    ts = tsTemp;
-                    progress = (int) Math.ceil(ts / 10.0 / duration);
+                    frame = frameTemp;
+                    progress = (int) Math.ceil(frame*100/(targetFPS*duration/1000));
                     listener.onProgressUpdate(progress);
                 }
                 try {
