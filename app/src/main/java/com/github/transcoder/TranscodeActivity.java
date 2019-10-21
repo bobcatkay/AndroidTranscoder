@@ -44,6 +44,7 @@ public class TranscodeActivity extends AppCompatActivity implements View.OnClick
     private TextView mTvBitrate;
     private TextView mTvDuration;
     private TextView mTvVcodec;
+    private TextView mTvRotation;
     private EditText mEditTargetWidth;
     private EditText mEditTargetHeight;
     private EditText mEditTargetFPS;
@@ -91,6 +92,7 @@ public class TranscodeActivity extends AppCompatActivity implements View.OnClick
         mTvBitrate = findViewById(R.id.tv_bitrate);
         mTvDuration = findViewById(R.id.tv_duration);
         mTvVcodec = findViewById(R.id.tv_vcodec);
+        mTvRotation = findViewById(R.id.tv_rotation);
 
         mEditTargetWidth = findViewById(R.id.edit_width);
         mEditTargetHeight = findViewById(R.id.edit_height);
@@ -212,6 +214,7 @@ public class TranscodeActivity extends AppCompatActivity implements View.OnClick
         mTvFps.setText("FPS：" + mInfo.fps);
         mTvDuration.setText("视频时长：" + MediaTool.parseTime((int) (mInfo.duration / 1000)));
         mTvVcodec.setText("Video Codec:" + mInfo.videoCodec);
+        mTvRotation.setText("Video Rotation:" + mInfo.rotation);
 
         mEditTargetBitrate.setText("4000");
         mEditTargetFPS.setText("30");

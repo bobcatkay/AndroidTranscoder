@@ -92,6 +92,7 @@
 #if HAVE_TERMIOS_H
 #include <fcntl.h>
 #include <sys/ioctl.h>
+#include <sys/time.h>
 #include <termios.h>
 #elif HAVE_KBHIT
 #include <conio.h>
@@ -101,7 +102,6 @@
 #include <pthread.h>
 #endif
 
-#include <time.h>
 #include <regex.h>
 
 #include "ffmpeg.h"
