@@ -6,12 +6,7 @@ import java.util.ArrayList;
 
 public class FFmpegCmd {
     static {
-        System.loadLibrary("avutil");
-        System.loadLibrary("avcodec");
-        System.loadLibrary("swresample");
-        System.loadLibrary("avformat");
-        System.loadLibrary("swscale");
-        System.loadLibrary("avfilter");
+        System.loadLibrary("ffmpeg");
         System.loadLibrary("ffmpeg-cmd");
     }
 
@@ -76,6 +71,8 @@ public class FFmpegCmd {
         cmd.add("ffmpeg");
         cmd.add("-d");
         cmd.add("-y");
+//        cmd.add("-c:v");
+//        cmd.add("h264_mediacodec");
         cmd.add("-i");
         cmd.add(srcPath);
         cmd.add("-preset");
@@ -88,6 +85,8 @@ public class FFmpegCmd {
         }
         cmd.add("-r");
         cmd.add(String.valueOf(targetFPS));
+//        cmd.add("-c:v");
+//        cmd.add("h264_omx");
         cmd.add(outPath);
         run(cmd);
     }
