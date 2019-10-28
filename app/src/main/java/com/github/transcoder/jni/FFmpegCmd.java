@@ -72,7 +72,7 @@ public class FFmpegCmd {
         cmd.add("-d");
         cmd.add("-y");
 //        cmd.add("-c:v");
-//        cmd.add("h264_mediacodec");
+//        cmd.add("hevc_mediacodec");
         cmd.add("-i");
         cmd.add(srcPath);
         cmd.add("-preset");

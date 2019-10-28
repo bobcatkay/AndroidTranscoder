@@ -61,7 +61,7 @@ public class MediaTool {
                     info.videoCodec = mime;
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             extractor.release();
