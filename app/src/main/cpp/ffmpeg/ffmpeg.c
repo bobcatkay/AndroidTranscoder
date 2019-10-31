@@ -115,6 +115,7 @@
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR  , "ffmpeg.c", __VA_ARGS__)
 
 static int progress = 0;
+static double transcode_speed= 0;
 
 const char program_name[] = "ffmpeg";
 const int program_birth_year = 2000;
@@ -1716,6 +1717,9 @@ static void print_report(int is_last_report, int64_t timer_start, int64_t cur_ti
             av_bprintf(&buf_script, "fps=%.1f\n", fps);
             av_bprintf(&buf_script, "stream_%d_%d_q=%.1f\n",
                        ost->file_index, ost->index, q);
+
+            progress = frame_number;
+
             if (is_last_report)
                 snprintf(buf + strlen(buf), sizeof(buf) - strlen(buf), "L");
             if (qp_hist) {
@@ -1812,6 +1816,7 @@ static void print_report(int is_last_report, int64_t timer_start, int64_t cur_ti
     } else {
         snprintf(buf + strlen(buf), sizeof(buf) - strlen(buf)," speed=%4.3gx", speed);
         av_bprintf(&buf_script, "speed=%4.3gx\n", speed);
+        transcode_speed = speed;
     }
 
     if (print_stats || is_last_report) {
@@ -4791,25 +4796,24 @@ static void log_callback_null(void *ptr, int level, const char *fmt, va_list vl)
 
     //updata progress
 //    char *regex = "size=[0-9]*[ ]*ts=([0-9]+[ ]*flags=)";;
-    char *regex = "[ ]*frame=[ ]*([0-9]+)[ ]*QP=";
-
-    regex_t comment;
-    regmatch_t regmatch[2];
-    regcomp(&comment, regex, REG_EXTENDED | REG_NEWLINE);
-    int status = regexec(&comment, line, 2, regmatch, 0);
-    if(status==0){
-        int cnt;
-        char str[256];
-        memset(str, sizeof(str), 0);
-        int start = regmatch[1].rm_so;
-        int end = regmatch[1].rm_eo;
-        cnt = end-start;
-        memcpy(str, &line[start], cnt);
-        str[cnt] = '\0';
-        LOGD("start=%d, end=%d, str=%s", start, end, str);
-        update_progress(str);
-    }
-    regfree(&comment);
+//    char *regex = "[ ]*frame=[ ]*([0-9]+)[ ]*QP=";
+//
+//    regex_t comment;
+//    regmatch_t regmatch[2];
+//    regcomp(&comment, regex, REG_EXTENDED | REG_NEWLINE);
+//    int status = regexec(&comment, line, 2, regmatch, 0);
+//    if(status==0){
+//        int cnt;
+//        char str[256];
+//        memset(str, sizeof(str), 0);
+//        int start = regmatch[1].rm_so;
+//        int end = regmatch[1].rm_eo;
+//        cnt = end-start;
+//        memcpy(str, &line[start], cnt);
+//        str[cnt] = '\0';
+//      update_progress(str);
+//    }
+//    regfree(&comment);
 
     if (level <= AV_LOG_WARNING) {
         LOGE("%s", line);
@@ -4902,18 +4906,16 @@ int ffmpeg_exec(int argc, char **argv)
     nb_input_files = 0;
     nb_input_streams = 0;
     progress = 0;
+    transcode_speed = 0;
     return main_return_code;
-}
-
-int update_progress(char* p) {
-    //char *srcStr = "Got output buffer 6 offset=0 size=3133440 ts=29267344 flags=0 ts=29267344";
-    //char *regex = "ts=([0-9]+)";
-    int result = atoi(p);
-    progress = result;
-    return result;
 }
 
 int get_progress()
 {
     return progress;
+}
+
+double get_speed()
+{
+    return transcode_speed;
 }
