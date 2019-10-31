@@ -26,7 +26,9 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.github.transcoder.bean.VideoInfo;
 import com.github.transcoder.jni.FFmpegCmd;
+import com.github.transcoder.util.Gutil;
 import com.github.transcoder.util.MediaTool;
 
 import java.io.File;
@@ -44,6 +46,7 @@ public class TranscodeActivity extends AppCompatActivity implements View.OnClick
     private TextView mTvBitrate;
     private TextView mTvDuration;
     private TextView mTvVcodec;
+    private TextView mTvRotation;
     private EditText mEditTargetWidth;
     private EditText mEditTargetHeight;
     private EditText mEditTargetFPS;
@@ -52,7 +55,8 @@ public class TranscodeActivity extends AppCompatActivity implements View.OnClick
     private ProgressBar mPbTranscode;
     private TextView mTvTimeSpent;
     private TextView mTvProgress;
-    private MediaTool.VideoInfo mInfo;
+    private TextView mTvTimeRemaining;
+    private VideoInfo mInfo;
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private Button mBtnStartTranscode;
     private Spinner mSpinnerPresets;
@@ -91,6 +95,7 @@ public class TranscodeActivity extends AppCompatActivity implements View.OnClick
         mTvBitrate = findViewById(R.id.tv_bitrate);
         mTvDuration = findViewById(R.id.tv_duration);
         mTvVcodec = findViewById(R.id.tv_vcodec);
+        mTvRotation = findViewById(R.id.tv_rotation);
 
         mEditTargetWidth = findViewById(R.id.edit_width);
         mEditTargetHeight = findViewById(R.id.edit_height);
@@ -122,6 +127,7 @@ public class TranscodeActivity extends AppCompatActivity implements View.OnClick
         mPbTranscode = findViewById(R.id.pb_transcode);
         mTvTimeSpent = findViewById(R.id.tv_time_spent);
         mTvProgress = findViewById(R.id.tv_trascode_progress);
+        mTvTimeRemaining = findViewById(R.id.tv_time_remaining);
 
         checkPermission();
     }
@@ -165,11 +171,13 @@ public class TranscodeActivity extends AppCompatActivity implements View.OnClick
                 Integer.valueOf(mEditTargetHeight.getText().toString()),
                 mInfo.duration,
                 mPreset,
-                progress -> mHandler.post(() -> {
+                mInfo,
+                (progress,timeRemaining) -> mHandler.post(() -> {
                     mPbTranscode.setProgress(progress);
                     mTvProgress.setText(progress + "%");
                     int time = (int) ((System.currentTimeMillis() - startTime) / 1000);
-                    mTvTimeSpent.setText("耗时：" + MediaTool.parseTime(time));
+                    mTvTimeSpent.setText("耗时：" + Gutil.parseTime(time));
+                    mTvTimeRemaining.setText("剩余："+ Gutil.parseTime((int) (timeRemaining/1000)));
                 }));
         MediaTool.insertMedia(getApplicationContext(), mEditSavePath.getText().toString());
         mHandler.postDelayed(() -> {
@@ -198,20 +206,22 @@ public class TranscodeActivity extends AppCompatActivity implements View.OnClick
 
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             mVideoPath = cursor.getString(columnIndex);
+//            mVideoPath = "/sdcard/Download/gamepp/KSP.mkv";
             cursor.close();
             updateVideo();
         }
     }
 
     private void updateVideo() {
-        Bitmap videoFrame = MediaTool.getVideoFrame(mVideoPath, 5000000);
+        Bitmap videoFrame = MediaTool.getVideoFrame(mVideoPath, 2000000);
         mIvCover.setImageBitmap(videoFrame);
-        mInfo = MediaTool.getVideoInfo(mVideoPath);
+        mInfo = FFmpegCmd.getVideoInfo(mVideoPath);
         mTvResolution.setText("分辨率：" + mInfo.width + "x" + mInfo.height);
-        mTvBitrate.setText("码率(Kbps)：" + mInfo.bitrate / 1024);
+        mTvBitrate.setText("码率：" + Gutil.bitrateFormat(mInfo.bitrate));
         mTvFps.setText("FPS：" + mInfo.fps);
-        mTvDuration.setText("视频时长：" + MediaTool.parseTime((int) (mInfo.duration / 1000)));
-        mTvVcodec.setText("Video Codec:" + mInfo.videoCodec);
+        mTvDuration.setText("视频时长：" + Gutil.parseTime((int) mInfo.duration/1000));
+        mTvVcodec.setText("Video Codec: " + mInfo.videoCodec);
+        mTvRotation.setText("Video Rotation: " + mInfo.rotation+"°");
 
         mEditTargetBitrate.setText("4000");
         mEditTargetFPS.setText("30");

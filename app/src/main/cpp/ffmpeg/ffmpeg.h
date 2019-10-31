@@ -676,9 +676,8 @@ int hw_device_setup_for_encode(OutputStream *ost);
 
 int hwaccel_decode_init(AVCodecContext *avctx);
 
-int update_progress(char* srcStr);
-
 int get_progress();
+double get_speed();
 
 int ffmpeg_exec(int argc, char **argv);
 #endif /* FFTOOLS_FFMPEG_H */

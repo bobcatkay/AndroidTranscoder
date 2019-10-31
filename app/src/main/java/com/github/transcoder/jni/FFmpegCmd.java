@@ -2,16 +2,13 @@ package com.github.transcoder.jni;
 
 import android.util.Log;
 
+import com.github.transcoder.bean.VideoInfo;
+import com.google.gson.Gson;
 import java.util.ArrayList;
 
 public class FFmpegCmd {
     static {
-        System.loadLibrary("avutil");
-        System.loadLibrary("avcodec");
-        System.loadLibrary("swresample");
-        System.loadLibrary("avformat");
-        System.loadLibrary("swscale");
-        System.loadLibrary("avfilter");
+        System.loadLibrary("ffmpeg");
         System.loadLibrary("ffmpeg-cmd");
     }
 
@@ -19,7 +16,10 @@ public class FFmpegCmd {
     private static native int run(int cmdLen, String[] cmd);
 
     //获取命令执行进度
-    public static native int getProgress();
+    private static native int getProgress();
+
+    //获取转码速率
+    private static native double getSpeed();
 
 
     /**
@@ -38,6 +38,8 @@ public class FFmpegCmd {
         return run(cmd.length, cmd);
     }
 
+    private static native String retrieveInfo(String path);
+
     /**
      * @param srcPath   视频源路径
      * @param outPath   视频输出路径
@@ -46,20 +48,25 @@ public class FFmpegCmd {
      * @param duration  视频时长(ms)
      * @param listener
      */
-    public static void transcode(String srcPath, String outPath, int targetFPS, int bitrate, int targetWidth, int targetHeight, long duration, String presets, ProgressListener listener) {
+    public static void transcode(String srcPath, String outPath, int targetFPS, int bitrate, int targetWidth, int targetHeight, long duration, String presets, VideoInfo info,ProgressListener listener) {
         new Thread(() -> {
-            int ts = -1;
+            int frame = -1;
             boolean started = false;
-            while (ts != 0) {
-                int tsTemp = getProgress();
+            while (frame != 0) {
+                int frameTemp = getProgress();
                 int progress;
-                if (tsTemp > 0) {
+                if (frameTemp > 0) {
                     started = true;
                 }
                 if (started) {
-                    ts = tsTemp;
-                    progress = (int) Math.ceil(ts / 10.0 / duration);
-                    listener.onProgressUpdate(progress);
+                    frame = frameTemp;
+                    progress = (int) Math.ceil(frame*100/(targetFPS*duration/1000));
+                    double speed = getSpeed();
+                    long timeRemaining = 0;
+                    if (speed>0) {
+                        timeRemaining = (long) (duration * (1 - progress / 100.0) / speed);
+                    }
+                    listener.onProgressUpdate(progress,timeRemaining);
                 }
                 try {
                     Thread.sleep(500);
@@ -68,14 +75,33 @@ public class FFmpegCmd {
                 }
             }
         }).start();
-        transcode(srcPath, outPath, targetFPS, bitrate, targetWidth, targetHeight, presets);
+        transcode(srcPath, outPath, targetFPS, bitrate, targetWidth, targetHeight, presets,info);
     }
 
-    public static void transcode(String srcPath, String outPath, int targetFPS, int bitrate, int width, int height, String presets) {
+    public static void transcode(String srcPath, String outPath, int targetFPS, int bitrate, int width, int height, String presets, VideoInfo info) {
         ArrayList<String> cmd = new ArrayList<>();
         cmd.add("ffmpeg");
-        cmd.add("-d");
+        //cmd.add("-d");
         cmd.add("-y");
+
+        //当rotation为0时使用硬件解码器
+        // rotation不为0时使用硬件解码视频画面可能会变绿
+        if (info.rotation==0){
+            switch (info.videoCodec){
+                case "h264":
+                    cmd.add("-c:v");
+                    cmd.add("h264_mediacodec");
+                    break;
+                case "hevc":
+                    cmd.add("-c:v");
+                    cmd.add("hevc_mediacodec");
+                    break;
+//                case "vp9":
+//                    cmd.add("-c:v");
+//                    cmd.add("vp9_mediacodec");
+//                    break;
+            }
+        }
         cmd.add("-i");
         cmd.add(srcPath);
         cmd.add("-preset");
@@ -93,6 +119,20 @@ public class FFmpegCmd {
     }
 
     public interface ProgressListener {
-        void onProgressUpdate(int progress);
+        void onProgressUpdate(int progress,long timeRemaining);
+    }
+
+    public static VideoInfo getVideoInfo(String path){
+        String s = null;
+        try {
+            s = retrieveInfo(path);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        VideoInfo info = new VideoInfo();
+        if (s!=null){
+            info = new Gson().fromJson(s, VideoInfo.class);
+        }
+        return info;
     }
 }
